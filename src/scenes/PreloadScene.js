@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, GAME_HEIGHT } from "../config.js";
 
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -9,8 +8,20 @@ export default class PreloadScene extends Phaser.Scene {
     this.createLoadingBar();
 
     this.load.spritesheet("ribbit-walk", "/sprites/ribbit/ribbit-walk.png", {
-      frameWidth: 67,
-      frameHeight: 61})
+      frameWidth: 68,
+      frameHeight: 99})
+    
+    this.load.spritesheet("ribbit-blink", "/sprites/ribbit/ribbit-blink.png", {
+      frameWidth: 68,
+      frameHeight: 99})
+	
+    this.load.spritesheet("ribbit-crouch-walk", "/sprites/ribbit/ribbit-crouch-walk.png", {
+      frameWidth: 68,
+      frameHeight: 99,});
+    
+    this.load.spritesheet("ribbit-idle", "/sprites/ribbit/ribbit-idle.png", {
+      frameWidth: 68,
+      frameHeight: 99})
 
     this.load.spritesheet("ribbit-jump", "/sprites/ribbit/ribbit-jump.png", {
       frameWidth: 68,

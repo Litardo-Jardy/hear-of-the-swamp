@@ -22,7 +22,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
 
-    // Colisiones básicas
     this.physics.add.collider(this.player, this.groundGroup);
     this.physics.add.collider(this.enemies, this.groundGroup);
 
@@ -31,8 +30,9 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.goalZone, this.handleGoalReached, null, this);
   }
 
- createGround() {
+createGround() {
   this.groundGroup = this.physics.add.staticGroup();
+
   const groundSegments = [
     { x: 0, width: 480 },
     { x: 680, width: 900 },
@@ -40,23 +40,22 @@ export default class GameScene extends Phaser.Scene {
   ];
 
   const tileHeight = 32;
+  const groundY = 500;
 
   groundSegments.forEach((segment) => {
-    const tile = this.add.tileSprite(
-      segment.x + segment.width / 2,
-      500,
-      segment.width,
-      tileHeight,
-      "ground"
-    );
-    this.physics.add.existing(tile, true);
-    this.groundGroup.add(tile);
+    const centerX = segment.x + segment.width / 2;
+
+    const body = this.add.rectangle(centerX, groundY, segment.width, tileHeight);
+    this.physics.add.existing(body, true);
+    body.setVisible(false);
+    this.groundGroup.add(body);
+
+    this.add.tileSprite(centerX, groundY, segment.width, tileHeight, "ground");
   });
 
   this.gapStart = 480;
   this.gapEnd = 680;
 }
-
   createPlayer() {
     this.player = new Ribbit(this, 60, 400);
   }
@@ -115,8 +114,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   handleGoalReached() {
-    // Placeholder: aquí luego conectamos con el evento de "encontrar a Vine"
-    // (ver tabla de tramos del pitch). Por ahora solo confirma que la meta funciona.
     this.add
       .text(this.cameras.main.midPoint.x, 200, "¡Tramo 1 completado!", {
         fontSize: "28px",
