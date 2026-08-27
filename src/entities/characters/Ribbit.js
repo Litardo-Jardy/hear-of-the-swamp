@@ -1,55 +1,35 @@
 import Player from "../Player";
 
+const createAnimationHook = (scene, data) => { 
+     for (const [key_data, start_data, end_data, frameRate_data, repeat_data] of data){
+        if (!scene.anims.exists(key_data)) {
+           scene.anims.create({
+           key: key_data,
+           frames: scene.anims.generateFrameNumbers(key_data, { start: start_data, end: end_data }),
+           frameRate: frameRate_data,
+           repeat: repeat_data});
+	}
+      }
+   }
+
 export default class Ribbit extends Player {
   constructor(scene, x, y) {
-    super(scene, x, y, "ribbit-walk", 0); // <-- corregido
+    super(scene, x, y, "ribbit-walk", 0);
     this.moveSpeed = 187;
     this.jumpVelocity = -350;
     this.longJumpMultiplier = 1.8;
     this.createAnimations(scene);
   }
   createAnimations(scene) {
-    if (!scene.anims.exists("ribbit-walk")) {
-      scene.anims.create({
-        key: "ribbit-walk",
-        frames: scene.anims.generateFrameNumbers("ribbit-walk", { start: 0, end: 9 }),
-        frameRate: 8,
-        repeat: -1,
-      });
-    }
-    if (!scene.anims.exists("ribbit-jump")) {
-      scene.anims.create({
-        key: "ribbit-jump",
-        frames: scene.anims.generateFrameNumbers("ribbit-jump", { start: 0, end: 4 }),
-        frameRate: 8,
-        repeat: 0,
-      });
-    }
-    if (!scene.anims.exists("ribbit-idle")) {
-      scene.anims.create({
-        key: "ribbit-idle",
-        frames: scene.anims.generateFrameNumbers("ribbit-idle", { start: 0, end: 3 }),
-        frameRate: 10,
-        repeat: 0,
-      });
-    }
-    if (!scene.anims.exists("ribbit-blink")) {
-      scene.anims.create({
-        key: "ribbit-blink",
-        frames: scene.anims.generateFrameNumbers("ribbit-blink", { start: 0, end: 1 }),
-        frameRate: 1.8,
-        repeat: 1,
-      });
-    }
-    if (!scene.anims.exists("ribbit-crouch-walk")) {
-      scene.anims.create({
-        key: "ribbit-crouch-walk",
-        frames: scene.anims.generateFrameNumbers("ribbit-crouch-walk", { start: 0, end: 1 }),
-        frameRate: 8,
-        repeat: -1,
-      });
-    }
-  }
+    //Creating and verifying animations for sprite rendering;
+    createAnimationHook(scene, [
+       ["ribbit-walk", 0, 9, 8, -1],
+       ["ribbit-jump", 0, 4, 8, 0],
+       ["ribbit-idle", 0, 3, 10, 0],
+       ["ribbit-blink", 0, 1, 2, 1],
+       ["ribbit-crouch-walk", 0, 1, 8, -1],
+    ])}
+
   updateAnimation(isMoving, onGround, isCrouching) {
     
      if (isCrouching) {

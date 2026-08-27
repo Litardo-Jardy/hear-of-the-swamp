@@ -17,6 +17,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.standingBody = { width: 36, height: 50, offsetX: 16, offsetY: 43 };
     this.crouchBody = { width: 36, height: 30, offsetX: 16, offsetY: 63 };
+    this.crouchSpeed = 85;
     this.isCrouching = false;
 
     this.moveSpeed = 170;
@@ -34,56 +35,44 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   update() {
-    const { left, right, up, down } = this.cursors;
-    const { left: a, right: d, up: w, down: s, ability } = this.keys;
+     const { left, right, up, down } = this.cursors;
+     const { left: a, right: d, up: w, down: s, ability } = this.keys;
+ 
+     const movingLeft = left.isDown || a.isDown;
+     const movingRight = right.isDown || d.isDown;
+     const wantsCrouch = down.isDown || s.isDown;
+     const jumpPressed =
+       Phaser.Input.Keyboard.JustDown(up) ||
+       Phaser.Input.Keyboard.JustDown(w) ||
+       Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
-    const movingLeft = left.isDown || a.isDown;
-    const movingRight = right.isDown || d.isDown;
-    const wantsCrouch = down.isDown || s.isDown;
-    const jumpPressed =
-      Phaser.Input.Keyboard.JustDown(up) ||
-      Phaser.Input.Keyboard.JustDown(w) ||
-      Phaser.Input.Keyboard.JustDown(this.cursors.space);
+     const onGround = this.body.blocked.down || this.body.touching.down;
 
-    const onGround = this.body.blocked.down || this.body.touching.down;
+     const shouldCrouch = wantsCrouch && onGround;
+     if (shouldCrouch !== this.isCrouching) {
+       this.isCrouching = shouldCrouch;
+       const shape = this.isCrouching ? this.crouchBody : this.standingBody;
+       this.body.setSize(shape.width, shape.height);
+       this.body.setOffset(shape.offsetX, shape.offsetY)}
 
-    const shouldCrouch = wantsCrouch && onGround;
-    if (shouldCrouch !== this.isCrouching) {
-      this.isCrouching = shouldCrouch;
-      const shape = this.isCrouching ? this.crouchBody : this.standingBody;
-      this.body.setSize(shape.width, shape.height);
-      this.body.setOffset(shape.offsetX, shape.offsetY)}
+     const direction = movingLeft ? -1 : movingRight ? 1 : 0;
+     const speed = this.isCrouching ? this.crouchSpeed : this.moveSpeed;
+  
+     //Calculate player conditions for movement;
+     if (!this.boostActive) {
+       this.setVelocityX(direction * speed)}
+     if (direction !== 0) {
+       this.setFlipX(direction < 0)}
+     if (onGround) {
+       this.boostActive = false}
+     if (jumpPressed && onGround && !this.isCrouching) {
+       this.onJump(ability.isDown)}
 
-    if (!this.boostActive) {
-      if(this.isCrouching && movingRight) {
-        this.setVelocityX(85);
-      }else if (this.isCrouching && movingLeft) { 
-        this.setVelocityX(-85);
-      }else if (movingLeft) {
-        this.setVelocityX(-this.moveSpeed);
-        this.setFlipX(true);
-      } else if (movingRight) {
-        this.setVelocityX(this.moveSpeed);
-        this.setFlipX(false);
-      } else {
-        this.setVelocityX(0)}
-    } else if (movingLeft) {
-      this.setFlipX(true);
-    } else if (movingRight) {
-      this.setFlipX(false)}
+     const isMoving = movingLeft || movingRight;
+     this.updateAnimation(isMoving, onGround, this.isCrouching);
+  }  
 
-    if (onGround) {
-      this.boostActive = false}
-
-    if (jumpPressed && onGround && !this.isCrouching) {
-      this.onJump(ability.isDown)}
-
-    const isMoving = movingLeft || movingRight;
-    this.updateAnimation(isMoving, onGround, wantsCrouch);
-  }
-
-  onJump(abilityHeld) {
-    this.setVelocityY(this.jumpVelocity)}
+  onJump(abilityHeld) { this.setVelocityY(this.jumpVelocity) }
 
   updateAnimation(isMoving, onGround, isCrouching) {}
 

@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import ribbitSheets  from '../entities/sheets/RibbitSheets'; 
 
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -6,26 +7,10 @@ export default class PreloadScene extends Phaser.Scene {
 
   preload() {
     this.createLoadingBar();
-
-    this.load.spritesheet("ribbit-walk", "/sprites/ribbit/ribbit-walk.png", {
-      frameWidth: 68,
-      frameHeight: 99})
     
-    this.load.spritesheet("ribbit-blink", "/sprites/ribbit/ribbit-blink.png", {
-      frameWidth: 68,
-      frameHeight: 99})
-	
-    this.load.spritesheet("ribbit-crouch-walk", "/sprites/ribbit/ribbit-crouch-walk.png", {
-      frameWidth: 68,
-      frameHeight: 99,});
-    
-    this.load.spritesheet("ribbit-idle", "/sprites/ribbit/ribbit-idle.png", {
-      frameWidth: 68,
-      frameHeight: 99})
-
-    this.load.spritesheet("ribbit-jump", "/sprites/ribbit/ribbit-jump.png", {
-      frameWidth: 68,
-      frameHeight: 99})
+    //Sprits Ribbit;
+    for (const [key, path] of ribbitSheets ){
+     this.load.spritesheet(key, path, { frameWidth: 68, frameHeight: 99})}
   }
 
   create() {

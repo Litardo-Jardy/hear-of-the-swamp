@@ -99,7 +99,6 @@ createGround() {
 
   handleEnemyContact(player, enemy) {
     this.loseLife();
-    // Empuje simple para separar al jugador del enemigo tras el golpe.
     const direction = player.x < enemy.x ? -1 : 1;
     player.setVelocity(direction * 200, -200);
   }
