@@ -28,6 +28,7 @@ export default class Ribbit extends Player {
        ["ribbit-idle", 0, 3, 10, 0],
        ["ribbit-blink", 0, 1, 2, 1],
        ["ribbit-crouch-walk", 0, 1, 8, -1],
+       ["ribbit-tongue", 0, 1, 4, -1]
     ])}
 
   updateAnimation(isMoving, onGround, isCrouching) {
@@ -51,7 +52,7 @@ export default class Ribbit extends Player {
       this._crouchAnimStarted = false}
 
     if (!onGround) {
-      this.anims.play("ribbit-jump", true);
+      this.anims.play("ribbit-tongue", true);
       return}
 
     if (isMoving) {
